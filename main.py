@@ -94,12 +94,15 @@ async def ask_orchestrator(data: dict):
             ]
         }
 
+    # Modified for better stability
     try:
-        response = requests.post(url, json=payload, headers=headers, timeout=180)
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Use a session for better performance/connection pooling
+        with requests.Session() as session:
+            response = session.post(url, json=payload, headers=headers, timeout=300)
+            response.raise_for_status()
+            return response.json()
+    except requests.exceptions.Timeout:
+        raise HTTPException(status_code=504, detail="Databricks agent took too long to respond.")
 
 if __name__ == "__main__":
     import uvicorn
