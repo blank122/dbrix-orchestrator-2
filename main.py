@@ -23,6 +23,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",  # The origin for your React app on your local machine/development environment
     "https://agentic-fis.vercel.app",
+    "http://localhost:5174",
 ]
 
 app.add_middleware(
