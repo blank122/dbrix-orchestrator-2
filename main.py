@@ -95,32 +95,32 @@ async def ask_orchestrator(data: dict):
             ]
         }
 
-   try:
-        with requests.Session() as session:
-            # DEBUG: See what we are sending
-            print(f"DEBUG: Sending Payload to Databricks: {json.dumps(payload, indent=2)}")
-            
-            response = session.post(url, json=payload, headers=headers, timeout=300)
-            
-            # DEBUG: See the raw status and content
-            print(f"DEBUG: Databricks Status Code: {response.status_code}")
-            
-            response.raise_for_status()
-            
-            result = response.json()
-            
-            # DEBUG: This is the most important part for your Chart Switcher
-            print(f"DEBUG: Raw Databricks Response JSON: {json.dumps(result, indent=2)}")
-            
-            return result
-            
-    except requests.exceptions.HTTPError as http_err:
-        print(f"DEBUG: HTTP Error occurred: {http_err}")
-        print(f"DEBUG: Error Response Body: {response.text}") # See the error message from Databricks
-        raise HTTPException(status_code=response.status_code, detail=str(http_err))
-    except requests.exceptions.Timeout:
-        print("DEBUG: Request timed out after 300 seconds.")
-        raise HTTPException(status_code=504, detail="Databricks agent took too long to respond.")
+       try:
+            with requests.Session() as session:
+                # DEBUG: See what we are sending
+                print(f"DEBUG: Sending Payload to Databricks: {json.dumps(payload, indent=2)}")
+                
+                response = session.post(url, json=payload, headers=headers, timeout=300)
+                
+                # DEBUG: See the raw status and content
+                print(f"DEBUG: Databricks Status Code: {response.status_code}")
+                
+                response.raise_for_status()
+                
+                result = response.json()
+                
+                # DEBUG: This is the most important part for your Chart Switcher
+                print(f"DEBUG: Raw Databricks Response JSON: {json.dumps(result, indent=2)}")
+                
+                return result
+                
+        except requests.exceptions.HTTPError as http_err:
+            print(f"DEBUG: HTTP Error occurred: {http_err}")
+            print(f"DEBUG: Error Response Body: {response.text}") # See the error message from Databricks
+            raise HTTPException(status_code=response.status_code, detail=str(http_err))
+        except requests.exceptions.Timeout:
+            print("DEBUG: Request timed out after 300 seconds.")
+            raise HTTPException(status_code=504, detail="Databricks agent took too long to respond.")
 
 if __name__ == "__main__":
     import uvicorn
